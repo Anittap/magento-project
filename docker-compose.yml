@@ -1,0 +1,60 @@
+services:
+  magento:
+    image: anittap/magento:v1
+    networks:
+      - magento-net
+    deploy:
+      replicas: 3
+      placement:
+        constraints:
+          - node.labels.tier == magento-worker  
+    environment:
+      MYSQL_HOST: magento-mysql
+      MYSQL_DATABASE: magentodb
+      MYSQL_USER: magentouser
+      MYSQL_PASSWORD: magentopass
+      ELASTICSEARCH_HOST: elasticsearch
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - magento-media:/var/www/html/pub/media  
+
+  magento-mysql:
+    image: mysql:8.0
+    networks:
+      - magento-net
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: magentodb
+      MYSQL_USER: magentouser
+      MYSQL_PASSWORD: magentopass
+    deploy:
+      placement:
+        constraints:
+          - node.labels.tier == magento-mysql 
+
+  elasticsearch:
+    image: elasticsearch:7.17.26
+    networks:
+      - magento-net
+    environment:
+      discovery.type: "single-node"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    deploy:
+      placement:
+        constraints:
+          - node.labels.tier == magento-elasticsearch  
+
+networks:
+  magento-net:
+    driver: overlay
+volumes:
+  magento-media:
+    driver: local
+    driver_opts:
+      type: "none"
+      device: "/mnt/efs"
+      o: "bind"
