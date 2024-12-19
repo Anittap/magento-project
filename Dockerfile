@@ -29,5 +29,6 @@ RUN git config --global --add safe.directory /var/www/html
 RUN git clone https://github.com/magento/magento2.git . && \
     git checkout 2.4 && \
     composer install
+COPY ./health.html ./pub
 EXPOSE 80
 CMD ["apache2-foreground"]
