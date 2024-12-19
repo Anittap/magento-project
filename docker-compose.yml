@@ -1,10 +1,10 @@
 services:
   magento:
-    image: anittap/magento:v1
+    image: anittap/magento:v2
     networks:
       - magento-net
     deploy:
-      replicas: 3
+      replicas: 6
       placement:
         constraints:
           - node.labels.tier == magento-worker  
