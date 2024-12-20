@@ -12,6 +12,8 @@ terraform init
 ```
 Temporarly remove the resource definitions after "master-asg" from main.tf since we need to create the manager node first, initiate docker swarm and use the join token to edit the userdata files(magento.sh, setup.sh) 
 
+Generate a public and private key in your working directory and name it mykey and mykey.pub
+
 Format the code using:
 ```
 terraform fmt
